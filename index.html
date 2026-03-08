@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>1 Month Anniversary ❤️</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#ffb6d5;
+overflow:hidden;
+color:white;
+text-align:center;
+}
+
+/* emoji background */
+
+#emojiBackground{
+position:fixed;
+width:100%;
+height:100%;
+top:0;
+left:0;
+overflow:hidden;
+z-index:0;
+}
+
+/* memory rain */
+
+#memoryRain{
+position:fixed;
+width:100%;
+height:100%;
+top:0;
+left:0;
+pointer-events:none;
+z-index:0;
+}
+
+.rainMedia{
+position:absolute;
+top:-150px;
+animation:rainFall linear forwards;
+border-radius:12px;
+box-shadow:0 0 10px rgba(255,255,255,0.6);
+}
+
+@keyframes rainFall{
+to{
+transform:translateY(120vh);
+}
+}
+
+/* screens */
+
+.screen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:1;
+}
+
+.hidden{
+display:none;
+}
+
+button{
+padding:15px 30px;
+font-size:20px;
+border:none;
+border-radius:20px;
+background:#ff4fa3;
+color:white;
+cursor:pointer;
+margin-top:20px;
+}
+
+button:hover{
+background:#ff2f8a;
+}
+
+#countdown{
+font-size:120px;
+font-weight:bold;
+}
+
+#video{
+max-width:80%;
+max-height:80%;
+border-radius:20px;
+box-shadow:0 0 30px pink;
+}
+
+#stats{
+font-size:25px;
+max-width:700px;
+line-height:1.6;
+}
+
+/* falling emojis */
+
+.falling{
+position:absolute;
+top:-50px;
+font-size:25px;
+animation:fall linear infinite;
+pointer-events:none;
+}
+
+@keyframes fall{
+to{
+transform:translateY(110vh);
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="emojiBackground"></div>
+<div id="memoryRain"></div>
+
+<!-- Start Screen -->
+
+<div id="start" class="screen">
+<h1>❤️ Happy 1 Month Anniversary ❤️</h1>
+<h2>Click to Watch Our VTR</h2>
+<button onclick="startCountdown()">Start</button>
+</div>
+
+<!-- Countdown -->
+
+<div id="countdownScreen" class="screen hidden">
+<div id="countdown">3</div>
+</div>
+
+<!-- Video -->
+
+<div id="videoScreen" class="screen hidden">
+<video id="video" src="anniversary.mp4"></video>
+</div>
+
+<!-- Final Page -->
+
+<div id="endScreen" class="screen hidden">
+
+<h1>Our First Month ❤️</h1>
+
+<div id="stats">
+
+<p>30 days together 💗</p>
+<p>720 hours of loving you</p>
+<p>43,200 minutes of thinking about you</p>
+
+<p>
+This first month with you has been one of the happiest moments of my life.
+Thank you for being here with me.
+I hope we can create many more memories together.
+</p>
+
+<p>I love you ❤️</p>
+
+</div>
+
+<button onclick="watchAgain()">Watch Again</button>
+
+</div>
+
+<audio id="music" src="music.mp3" loop></audio>
+<audio id="countdownSound" src="countdown.mp3"></audio>
+
+<script>
+
+/* screens */
+
+const start = document.getElementById("start")
+const countdownScreen = document.getElementById("countdownScreen")
+const videoScreen = document.getElementById("videoScreen")
+const endScreen = document.getElementById("endScreen")
+const countdownText = document.getElementById("countdown")
+const video = document.getElementById("video")
+
+const music = document.getElementById("music")
+const countdownSound = document.getElementById("countdownSound")
+
+/* start countdown */
+
+function startCountdown(){
+
+start.classList.add("hidden")
+countdownScreen.classList.remove("hidden")
+
+let count = 3
+
+countdownSound.play()
+
+let interval = setInterval(()=>{
+
+count--
+countdownText.innerText = count
+
+if(count === 0){
+
+clearInterval(interval)
+
+setTimeout(()=>{
+startVideo()
+},1000)
+
+}
+
+},1000)
+
+}
+
+/* start video */
+
+function startVideo(){
+
+countdownScreen.classList.add("hidden")
+videoScreen.classList.remove("hidden")
+
+video.play()
+
+}
+
+/* video ended */
+
+video.onended = function(){
+
+videoScreen.classList.add("hidden")
+endScreen.classList.remove("hidden")
+
+music.play()
+startMemoryRain()
+
+}
+
+/* watch again */
+
+function watchAgain(){
+
+music.pause()
+music.currentTime = 0
+
+stopMemoryRain()
+
+endScreen.classList.add("hidden")
+videoScreen.classList.remove("hidden")
+
+video.currentTime = 0
+video.play()
+
+}
+
+/* falling emojis */
+
+function createFalling(){
+
+const icons = ["❤️","🌸","💗","🌺"]
+
+const el = document.createElement("div")
+el.classList.add("falling")
+
+el.innerText = icons[Math.floor(Math.random()*icons.length)]
+
+el.style.left = Math.random()*100 + "vw"
+el.style.animationDuration = (Math.random()*5+5) + "s"
+
+document.getElementById("emojiBackground").appendChild(el)
+
+setTimeout(()=>{el.remove()},10000)
+
+}
+
+setInterval(createFalling,300)
+
+/* memory rain */
+
+const mediaFiles = [
+"pic1.jpg",
+"pic2.jpg",
+"pic3.jpg",
+"clip.mp4"
+]
+
+let rainInterval
+
+function startMemoryRain(){
+
+rainInterval = setInterval(()=>{
+
+const file = mediaFiles[Math.floor(Math.random()*mediaFiles.length)]
+
+let el
+
+if(file.endsWith(".mp4")){
+
+el = document.createElement("video")
+el.src = file
+el.autoplay = true
+el.loop = true
+el.muted = true
+
+}else{
+
+el = document.createElement("img")
+el.src = file
+
+}
+
+el.classList.add("rainMedia")
+
+el.style.left = Math.random()*100 + "vw"
+el.style.animationDuration = (Math.random()*6 + 6) + "s"
+
+/* smaller size */
+el.style.width = (Math.random()*60 + 60) + "px"
+
+document.getElementById("memoryRain").appendChild(el)
+
+setTimeout(()=>{
+el.remove()
+},12000)
+
+},2400)
+
+}
+
+function stopMemoryRain(){
+clearInterval(rainInterval)
+}
+
+</script>
+
+</body>
+</html>
